@@ -78,11 +78,6 @@ set(PS2_CLK_PIN ${PS2_CLK_PIN} CACHE INTERNAL "PS/2 Clock Pin")
 
 include(pico_sdk_import.cmake)
 
-# Import pico-extras for audio_i2s library (for future sound support)
-set(PICO_EXTRAS_PATH ${CMAKE_CURRENT_LIST_DIR}/pico-extras CACHE PATH "Path to pico-extras")
-if(EXISTS ${PICO_EXTRAS_PATH}/external/pico_extras_import.cmake)
-    include(${PICO_EXTRAS_PATH}/external/pico_extras_import.cmake)
-endif()
 
 project(murmduke3d C CXX ASM)
 set(CMAKE_C_STANDARD 11)
@@ -96,10 +91,6 @@ message(STATUS "Version: ${MURMDUKE_VERSION}")
 
 pico_sdk_init()
 
-# Initialize pico-extras if available
-if(COMMAND pico_extras_init)
-    pico_extras_init()
-endif()
 
 # Add fatfs
 add_subdirectory(src/fatfs)
@@ -158,6 +149,7 @@ set(GAME_SOURCES
 
 # Sound system - I2S audio driver
 set(SOUND_SOURCES
+    src/audio.c
     src/i_picosound.c
     src/audio_stub.c
     src/i_music.c
@@ -187,6 +179,9 @@ add_executable(murmduke3d
     ${SOUND_SOURCES}
     ${OPL_SOURCES}
 )
+
+# PIO header generation must come after add_executable
+add_subdirectory(drivers/audio)
 
 target_include_directories(murmduke3d PRIVATE
     src
@@ -231,13 +226,11 @@ target_compile_definitions(murmduke3d PRIVATE
     # I2S Audio Configuration
     # NOTE: Resource allocation:
     # - PIO0 SM0: PS/2 keyboard (claims first unused)
-    # - PIO0 SM1: I2S audio (we claim this specific SM)
+    # - PIO0 SM1: I2S audio (claims unused SM on PIO0)
     # - PIO1 SM0-1: HDMI video (claims unused)
     # - DMA IRQ0: HDMI (exclusive handler)
-    # - DMA IRQ1: I2S audio (shared handler)
-    PICO_AUDIO_I2S_PIO=0
-    PICO_AUDIO_I2S_STATE_MACHINE=1
-    PICO_AUDIO_I2S_DMA_IRQ=1
+    # - DMA IRQ1: I2S audio (exclusive handler)
+    # - DMA channels 10/11: I2S audio ping-pong
     NUM_SOUND_CHANNELS=8
     # OPL emulator configuration
     USE_EMU8950_OPL=1
@@ -246,18 +239,6 @@ target_compile_definitions(murmduke3d PRIVATE
     EMU8950_SLOT_RENDER=0
 )
 
-# Add I2S pin definitions based on board variant
-if(BOARD_VARIANT STREQUAL "M1")
-    target_compile_definitions(murmduke3d PRIVATE
-        PICO_AUDIO_I2S_DATA_PIN=26
-        PICO_AUDIO_I2S_CLOCK_PIN_BASE=27
-    )
-else()
-    target_compile_definitions(murmduke3d PRIVATE
-        PICO_AUDIO_I2S_DATA_PIN=9
-        PICO_AUDIO_I2S_CLOCK_PIN_BASE=10
-    )
-endif()
 
 # Relax some warnings for the Duke3D engine code (32-bit pointer issues)
 target_compile_options(murmduke3d PRIVATE
@@ -286,7 +267,7 @@ endif()
 target_link_libraries(murmduke3d
     pico_stdlib
     pico_multicore
-    pico_audio_i2s
+    hardware_clocks
     hardware_spi
     hardware_dma
     hardware_pio

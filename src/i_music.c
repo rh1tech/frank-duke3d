@@ -13,7 +13,6 @@
 #include <assert.h>
 
 #include "pico.h"
-#include "pico/audio.h"  // For audio_buffer_t definition
 #include "i_music.h"
 #include "i_picosound.h"
 #include "opl/emu8950.h"

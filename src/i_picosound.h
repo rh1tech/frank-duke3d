@@ -1,7 +1,6 @@
 /*
  * Duke3D Sound System for RP2350
- * Based on murmdoom's i_picosound implementation
- * Uses I2S audio via PIO
+ * Uses I2S audio via PIO + DMA ping-pong driver
  */
 
 #ifndef __I_PICO_SOUND_H
@@ -11,10 +10,20 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// Forward declare audio buffer type
-typedef struct audio_buffer audio_buffer_t;
+// Lightweight audio buffer (replaces pico-extras audio_buffer_t)
+typedef struct audio_buffer_data {
+    uint8_t *bytes;
+    uint32_t size;
+} audio_buffer_data_t;
 
-// Audio sample rate - CD quality for best sound
+typedef struct audio_buffer {
+    audio_buffer_data_t buf_storage;
+    audio_buffer_data_t *buffer;
+    uint32_t max_sample_count;
+    uint32_t sample_count;
+} audio_buffer_t;
+
+// Audio sample rate
 #ifndef PICO_SOUND_SAMPLE_FREQ
 #define PICO_SOUND_SAMPLE_FREQ 22050
 #endif
@@ -37,11 +46,6 @@ typedef struct audio_buffer audio_buffer_t;
 // Enable low-pass filtering to reduce resampling artifacts
 #ifndef SOUND_LOW_PASS
 #define SOUND_LOW_PASS 1
-#endif
-
-// Enable increased I2S drive strength for cleaner signal
-#ifndef INCREASE_I2S_DRIVE_STRENGTH
-#define INCREASE_I2S_DRIVE_STRENGTH 1
 #endif
 
 //=============================================================================
@@ -74,7 +78,7 @@ int I_PicoSound_PlayVOC(const uint8_t *data, uint32_t length,
                         int priority, uint32_t callbackval,
                         bool looping, uint32_t loopstart, uint32_t loopend);
 
-// Play a WAV format sound  
+// Play a WAV format sound
 // Returns voice handle (>0) or 0 on failure
 int I_PicoSound_PlayWAV(const uint8_t *data, uint32_t length,
                         int pitchoffset,
@@ -144,7 +148,7 @@ bool I_PicoSound_GetReverseStereo(void);
 void I_PicoSound_SetCallback(void (*callback)(int32_t));
 
 //=============================================================================
-// Music Generator (for future music support)
+// Music Generator
 //=============================================================================
 
 // Set a function to generate music into audio buffers

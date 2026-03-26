@@ -25,7 +25,6 @@
 #include <assert.h>
 
 #include "pico/mutex.h"
-#include "pico/audio_i2s.h"
 #include "pico/util/pheap.h"
 #include "hardware/gpio.h"
 #include "../i_picosound.h"
