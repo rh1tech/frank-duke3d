@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Interactive Build Script for murmduke3d
+# Interactive Build Script for frank-duke3d
 # Duke Nukem 3D for RP2350 with PSRAM
 #
 
 set -e
 
 echo "╔═══════════════════════════════════════════════════════════════╗"
-echo "║         murmduke3d - Duke Nukem 3D for RP2350                 ║"
+echo "║         frank-duke3d - Duke Nukem 3D for RP2350                 ║"
 echo "║                 Interactive Build Script                      ║"
 echo "╚═══════════════════════════════════════════════════════════════╝"
 echo ""
@@ -232,13 +232,13 @@ echo " Build Complete!"
 echo "═══════════════════════════════════════════════════════════════════"
 echo ""
 echo "Output files:"
-echo "  - build/murmduke3d.uf2"
-echo "  - build/murmduke3d.elf"
+echo "  - build/frank-duke3d.uf2"
+echo "  - build/frank-duke3d.elf"
 echo ""
 echo "To flash:"
 echo "  1. Hold BOOTSEL button and connect Pico to USB"
-echo "  2. Copy build/murmduke3d.uf2 to the RPI-RP2 drive"
+echo "  2. Copy build/frank-duke3d.uf2 to the RPI-RP2 drive"
 echo ""
 echo "  Or use picotool:"
-echo "    cd build && picotool load -f ./murmduke3d.elf && picotool reboot -f"
+echo "    cd build && picotool load -f ./frank-duke3d.elf && picotool reboot -f"
 echo ""

@@ -58,25 +58,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version_tag }}
-          name: "murmduke32 ${{ steps.version.outputs.version_dot }}"
+          name: "frank-duke3d ${{ steps.version.outputs.version_dot }}"
           body: |
-            ## murmduke32 ${{ steps.version.outputs.version_dot }}
+            ## frank-duke3d ${{ steps.version.outputs.version_dot }}
 
             ### Firmware files
 
             **Standard UF2 (drag & drop to Pico 2):**
             | File | Board | CPU | PSRAM |
             |------|-------|-----|-------|
-            | `murmduke32_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz |
-            | `murmduke32_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz |
-            | `murmduke32_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz |
-            | `murmduke32_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz |
+            | `frank-duke3d_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz |
+            | `frank-duke3d_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz |
+            | `frank-duke3d_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz |
+            | `frank-duke3d_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz |
 
             **Murmulator OS 2:**
             | File | Board | CPU | PSRAM |
             |------|-------|-----|-------|
-            | `murmduke32_m1_*.m1p2` | M1 | various | various |
-            | `murmduke32_m2_*.m2p2` | M2 | various | various |
+            | `frank-duke3d_m1_*.m1p2` | M1 | various | various |
+            | `frank-duke3d_m2_*.m2p2` | M2 | various | various |
 
             ### How to flash
             1. Hold BOOTSEL on your Pico 2 and plug in USB

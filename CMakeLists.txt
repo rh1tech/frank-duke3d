@@ -79,15 +79,15 @@ set(PS2_CLK_PIN ${PS2_CLK_PIN} CACHE INTERNAL "PS/2 Clock Pin")
 include(pico_sdk_import.cmake)
 
 
-project(murmduke3d C CXX ASM)
+project(frank-duke3d C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 # Read version from version.txt
-file(READ "${CMAKE_CURRENT_LIST_DIR}/version.txt" MURMDUKE_VERSION_RAW)
-string(STRIP "${MURMDUKE_VERSION_RAW}" MURMDUKE_VERSION_RAW)
-string(REGEX REPLACE "[ \t]+" "." MURMDUKE_VERSION "${MURMDUKE_VERSION_RAW}")
-message(STATUS "Version: ${MURMDUKE_VERSION}")
+file(READ "${CMAKE_CURRENT_LIST_DIR}/version.txt" FRANKDUKE_VERSION_RAW)
+string(STRIP "${FRANKDUKE_VERSION_RAW}" FRANKDUKE_VERSION_RAW)
+string(REGEX REPLACE "[ \t]+" "." FRANKDUKE_VERSION "${FRANKDUKE_VERSION_RAW}")
+message(STATUS "Version: ${FRANKDUKE_VERSION}")
 
 pico_sdk_init()
 
@@ -162,7 +162,7 @@ set(OPL_SOURCES
     src/opl/midifile.c
 )
 
-add_executable(murmduke3d
+add_executable(frank-duke3d
     src/main.c
     src/welcome.c
     src/duke3d_rp2350.c
@@ -183,7 +183,7 @@ add_executable(murmduke3d
 # PIO header generation must come after add_executable
 add_subdirectory(drivers/audio)
 
-target_include_directories(murmduke3d PRIVATE
+target_include_directories(frank-duke3d PRIVATE
     src
     src/SDL
     src/fatfs
@@ -199,13 +199,13 @@ target_include_directories(murmduke3d PRIVATE
 
 # Only include usbhid directory when USB HID is enabled (to avoid tusb_config.h conflict)
 if(USB_HID_ENABLED)
-    target_include_directories(murmduke3d PRIVATE drivers/usbhid)
+    target_include_directories(frank-duke3d PRIVATE drivers/usbhid)
 endif()
 
-target_compile_definitions(murmduke3d PRIVATE
+target_compile_definitions(frank-duke3d PRIVATE
     BOARD_${BOARD_VARIANT}
     DBOARD_VARIANT="${BOARD_VARIANT}"
-    MURMDUKE_VERSION="${MURMDUKE_VERSION}"
+    FRANKDUKE_VERSION="${FRANKDUKE_VERSION}"
     # CPU/PSRAM/Flash speed configuration
     CPU_CLOCK_MHZ=${CPU_SPEED}
     CPU_VOLTAGE=${CPU_VOLTAGE}
@@ -241,7 +241,7 @@ target_compile_definitions(murmduke3d PRIVATE
 
 
 # Relax some warnings for the Duke3D engine code (32-bit pointer issues)
-target_compile_options(murmduke3d PRIVATE
+target_compile_options(frank-duke3d PRIVATE
     -Wno-int-conversion
     -Wno-pointer-to-int-cast
     -Wno-int-to-pointer-cast
@@ -251,7 +251,7 @@ target_compile_options(murmduke3d PRIVATE
 
 # Allow multiple definitions (ESP32 port has variables defined in headers)
 # This is a workaround - ideally headers should use extern
-target_link_options(murmduke3d PRIVATE
+target_link_options(frank-duke3d PRIVATE
     -Wl,--allow-multiple-definition
 )
 
@@ -259,12 +259,12 @@ target_link_options(murmduke3d PRIVATE
 # MOS2 builds use offset linker script for bootloader compatibility
 if(MOS2)
     message(STATUS "MOS2 build: Using offset linker script for Murmulator OS 2")
-    pico_set_linker_script(murmduke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.mos2.ld)
+    pico_set_linker_script(frank-duke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.mos2.ld)
 else()
-    pico_set_linker_script(murmduke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.ld)
+    pico_set_linker_script(frank-duke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.ld)
 endif()
 
-target_link_libraries(murmduke3d
+target_link_libraries(frank-duke3d
     pico_stdlib
     pico_multicore
     hardware_clocks
@@ -282,7 +282,7 @@ target_link_libraries(murmduke3d
 )
 
 # Wrap stdio functions to use FatFS
-target_link_options(murmduke3d PRIVATE
+target_link_options(frank-duke3d PRIVATE
     -Wl,--wrap=fopen
     -Wl,--wrap=fclose
     -Wl,--wrap=fread
@@ -304,15 +304,15 @@ target_link_options(murmduke3d PRIVATE
 # When USB HID disabled: USB port is used for serial console
 if(USB_HID_ENABLED)
     message(STATUS "Debug output: UART (USB used for HID)")
-    pico_enable_stdio_usb(murmduke3d 0)
-    pico_enable_stdio_uart(murmduke3d 1)
+    pico_enable_stdio_usb(frank-duke3d 0)
+    pico_enable_stdio_uart(frank-duke3d 1)
 else()
     message(STATUS "Debug output: USB Serial Console")
-    pico_enable_stdio_usb(murmduke3d 1)
-    pico_enable_stdio_uart(murmduke3d 0)
+    pico_enable_stdio_usb(frank-duke3d 1)
+    pico_enable_stdio_uart(frank-duke3d 0)
 endif()
 
-pico_add_extra_outputs(murmduke3d)
+pico_add_extra_outputs(frank-duke3d)
 
 # MOS2: Rename output file to .m1p2 or .m2p2
 if(MOS2)
@@ -321,10 +321,10 @@ if(MOS2)
     else()
         set(MOS2_EXT "m1p2")
     endif()
-    add_custom_command(TARGET murmduke3d POST_BUILD
+    add_custom_command(TARGET frank-duke3d POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/murmduke3d.uf2"
-            "${CMAKE_CURRENT_BINARY_DIR}/murmduke3d.${MOS2_EXT}"
-        COMMENT "Creating MOS2 output: murmduke3d.${MOS2_EXT}"
+            "${CMAKE_CURRENT_BINARY_DIR}/frank-duke3d.uf2"
+            "${CMAKE_CURRENT_BINARY_DIR}/frank-duke3d.${MOS2_EXT}"
+        COMMENT "Creating MOS2 output: frank-duke3d.${MOS2_EXT}"
     )
 endif()

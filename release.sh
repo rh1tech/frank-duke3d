@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# release.sh - Build all release variants of murmduke32
+# release.sh - Build all release variants of frank-duke3d
 #
 # Creates firmware files for each board variant (M1, M2) at each clock speed:
 #   - Medium overclock: 378 MHz CPU, 133 MHz PSRAM (126 MHz actual)
 #   - Max overclock: 504 MHz CPU, 166 MHz PSRAM (168 MHz actual)
 #
 # Output formats:
-#   - UF2: murmduke32_mX_Y_Z_A_BB.uf2 (standard Pico firmware)
-#   - MOS2: murmduke32_mX_Y_Z_A_BB.m1p2/m2p2 (Murmulator OS 2)
+#   - UF2: frank-duke3d_mX_Y_Z_A_BB.uf2 (standard Pico firmware)
+#   - MOS2: frank-duke3d_mX_Y_Z_A_BB.m1p2/m2p2 (Murmulator OS 2)
 #
 # X  = Board variant (1 or 2)
 # Y  = CPU clock in MHz
@@ -51,7 +51,7 @@ fi
 # Interactive version input
 echo ""
 echo -e "${CYAN}┌─────────────────────────────────────────────────────────────────┐${NC}"
-echo -e "${CYAN}│                    murmduke32 Release Builder                  │${NC}"
+echo -e "${CYAN}│                    frank-duke3d Release Builder                  │${NC}"
 echo -e "${CYAN}└─────────────────────────────────────────────────────────────────┘${NC}"
 echo ""
 echo -e "Last version: ${YELLOW}${LAST_MAJOR}.$(printf '%02d' $LAST_MINOR)${NC}"
@@ -138,12 +138,12 @@ for config in "${CONFIGS[@]}"; do
         else
             EXT="m2p2"
         fi
-        OUTPUT_NAME="murmduke32_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
-        BUILD_FILE="murmduke3d.${EXT}"
+        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
+        BUILD_FILE="frank-duke3d.${EXT}"
     else
         EXT="uf2"
-        OUTPUT_NAME="murmduke32_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
-        BUILD_FILE="murmduke3d.uf2"
+        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
+        BUILD_FILE="frank-duke3d.uf2"
     fi
 
     echo ""
@@ -191,9 +191,9 @@ echo ""
 echo "Release files in: $RELEASE_DIR/"
 echo ""
 echo -e "${CYAN}Standard UF2 files:${NC}"
-ls -la "$RELEASE_DIR"/murmduke32_*_${VERSION}.uf2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
+ls -la "$RELEASE_DIR"/frank-duke3d_*_${VERSION}.uf2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
 echo ""
 echo -e "${CYAN}MOS2 files (Murmulator OS 2):${NC}"
-ls -la "$RELEASE_DIR"/murmduke32_*_${VERSION}.m?p2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
+ls -la "$RELEASE_DIR"/frank-duke3d_*_${VERSION}.m?p2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
 echo ""
 echo -e "Version: ${CYAN}${MAJOR}.$(printf '%02d' $MINOR)${NC}"

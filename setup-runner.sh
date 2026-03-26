@@ -17,7 +17,7 @@
 set -e
 
 echo "========================================"
-echo " murmduke32 CI Runner Setup"
+echo " frank-duke3d CI Runner Setup"
 echo "========================================"
 
 # --- Step 1: Install build dependencies ---
@@ -75,7 +75,7 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo " You need a runner registration token from GitHub."
 echo ""
-echo " Go to: https://github.com/rh1tech/murmduke3d/settings/actions/runners/new"
+echo " Go to: https://github.com/rh1tech/frank-duke3d/settings/actions/runners/new"
 echo " Copy the token shown in the 'Configure' section."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
@@ -107,10 +107,10 @@ else
 
     # Configure runner
     ./config.sh \
-        --url https://github.com/rh1tech/murmduke3d \
+        --url https://github.com/rh1tech/frank-duke3d \
         --token "$RUNNER_TOKEN" \
-        --name "murmduke32-builder" \
-        --labels "self-hosted,linux,murmduke32" \
+        --name "frank-duke3d-builder" \
+        --labels "self-hosted,linux,frank-duke3d" \
         --unattended \
         --replace
 
@@ -134,12 +134,12 @@ echo " Setup Complete!"
 echo "========================================"
 echo ""
 echo "Runner status: sudo ./svc.sh status"
-echo "Runner logs:   journalctl -u actions.runner.rh1tech-murmduke3d.murmduke32-builder.service -f"
+echo "Runner logs:   journalctl -u actions.runner.rh1tech-frank-duke3d.frank-duke3d-builder.service -f"
 echo ""
 echo "PICO_SDK_PATH=$PICO_SDK_PATH"
 echo ""
 echo "To test the build manually:"
-echo "  cd /tmp && git clone https://github.com/rh1tech/murmduke3d.git && cd murmduke3d"
+echo "  cd /tmp && git clone https://github.com/rh1tech/frank-duke3d.git && cd frank-duke3d"
 echo "  chmod +x release-ci.sh && ./release-ci.sh 1 00"
 echo ""
 echo "The runner will now pick up jobs from GitHub Actions automatically."

@@ -16,7 +16,7 @@ Developer Machine                  GitHub                     Build Server
 └──────────────┘              │ triggered    │           │                     │
                               └──────┬───────┘           │ ~/pico-sdk/         │
                                      │                   │ ~/runners/          │
-                              ┌──────▼───────┐           │   ├── murmduke3d/   │
+                              ┌──────▼───────┐           │   ├── frank-duke3d/   │
                               │ GitHub       │<── .uf2 ──│   ├── other-repo/   │
                               │ Release      │   .m1p2   │   └── ...           │
                               │ created      │   .m2p2   └─────────────────────┘
@@ -81,14 +81,14 @@ When triggered by a `release:` commit on the `main` or `master` branch:
 
 | # | File pattern | Board | CPU | PSRAM | Format |
 |---|-------------|-------|-----|-------|--------|
-| 1 | `murmduke32_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz | UF2 |
-| 2 | `murmduke32_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz | UF2 |
-| 3 | `murmduke32_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz | UF2 |
-| 4 | `murmduke32_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz | UF2 |
-| 5 | `murmduke32_m1_378_133_*.m1p2` | M1 | 378 MHz | 133 MHz | MOS2 |
-| 6 | `murmduke32_m1_504_166_*.m1p2` | M1 | 504 MHz | 166 MHz | MOS2 |
-| 7 | `murmduke32_m2_378_133_*.m2p2` | M2 | 378 MHz | 133 MHz | MOS2 |
-| 8 | `murmduke32_m2_504_166_*.m2p2` | M2 | 504 MHz | 166 MHz | MOS2 |
+| 1 | `frank-duke3d_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz | UF2 |
+| 2 | `frank-duke3d_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz | UF2 |
+| 3 | `frank-duke3d_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz | UF2 |
+| 4 | `frank-duke3d_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz | UF2 |
+| 5 | `frank-duke3d_m1_378_133_*.m1p2` | M1 | 378 MHz | 133 MHz | MOS2 |
+| 6 | `frank-duke3d_m1_504_166_*.m1p2` | M1 | 504 MHz | 166 MHz | MOS2 |
+| 7 | `frank-duke3d_m2_378_133_*.m2p2` | M2 | 378 MHz | 133 MHz | MOS2 |
+| 8 | `frank-duke3d_m2_504_166_*.m2p2` | M2 | 504 MHz | 166 MHz | MOS2 |
 
 4. **Creates a GitHub Release** tagged `vMAJOR.MINOR` with all firmware files attached
 
@@ -106,7 +106,7 @@ When triggered by a `release:` commit on the `main` or `master` branch:
 ### Output filename convention
 
 ```
-murmduke32_m<BOARD>_<CPU>_<PSRAM>_<MAJOR>_<MINOR>.<ext>
+frank-duke3d_m<BOARD>_<CPU>_<PSRAM>_<MAJOR>_<MINOR>.<ext>
 ```
 
 - `BOARD` — `1` (M1) or `2` (M2)
@@ -183,19 +183,19 @@ jobs:
 ### Check runner status
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'sudo systemctl status actions.runner.rh1tech-murmduke3d.rp2350-builder.service'
+ssh xtreme@rbx1.re-hash.org 'sudo systemctl status actions.runner.rh1tech-frank-duke3d.rp2350-builder.service'
 ```
 
 ### View runner logs
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'journalctl -u actions.runner.rh1tech-murmduke3d.rp2350-builder.service -f'
+ssh xtreme@rbx1.re-hash.org 'journalctl -u actions.runner.rh1tech-frank-duke3d.rp2350-builder.service -f'
 ```
 
 ### Restart runner
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && sudo ./svc.sh stop && sudo ./svc.sh start'
+ssh xtreme@rbx1.re-hash.org 'cd ~/runners/frank-duke3d && sudo ./svc.sh stop && sudo ./svc.sh start'
 ```
 
 ### List all runner services on the server
@@ -243,10 +243,10 @@ Then add each repo with `add-runner.sh`.
 
 ```bash
 # Check service status
-ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && sudo ./svc.sh status'
+ssh xtreme@rbx1.re-hash.org 'cd ~/runners/frank-duke3d && sudo ./svc.sh status'
 
 # Restart
-ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && sudo ./svc.sh stop && sudo ./svc.sh start'
+ssh xtreme@rbx1.re-hash.org 'cd ~/runners/frank-duke3d && sudo ./svc.sh stop && sudo ./svc.sh start'
 ```
 
 ### Build fails with "PICO_SDK_PATH not set"
@@ -254,14 +254,14 @@ ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && sudo ./svc.sh stop && su
 The runner's `.env` file may be missing or incorrect:
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'cat ~/runners/murmduke3d/.env'
+ssh xtreme@rbx1.re-hash.org 'cat ~/runners/frank-duke3d/.env'
 # Should show: PICO_SDK_PATH=/home/xtreme/pico-sdk
 ```
 
 Fix:
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'echo "PICO_SDK_PATH=/home/xtreme/pico-sdk" > ~/runners/murmduke3d/.env'
+ssh xtreme@rbx1.re-hash.org 'echo "PICO_SDK_PATH=/home/xtreme/pico-sdk" > ~/runners/frank-duke3d/.env'
 ```
 
 ### Broken symlinks after runner auto-update
@@ -269,9 +269,9 @@ ssh xtreme@rbx1.re-hash.org 'echo "PICO_SDK_PATH=/home/xtreme/pico-sdk" > ~/runn
 The GitHub runner auto-updates itself. If `bin` or `externals` become broken symlinks:
 
 ```bash
-ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && ls -la bin externals'
+ssh xtreme@rbx1.re-hash.org 'cd ~/runners/frank-duke3d && ls -la bin externals'
 # If broken, fix by pointing to latest versioned directory:
-ssh xtreme@rbx1.re-hash.org 'cd ~/runners/murmduke3d && rm -f bin externals && ln -s bin.* bin && ln -s externals.* externals'
+ssh xtreme@rbx1.re-hash.org 'cd ~/runners/frank-duke3d && rm -f bin externals && ln -s bin.* bin && ln -s externals.* externals'
 ```
 
 ### Version already exists on GitHub

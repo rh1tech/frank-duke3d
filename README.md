@@ -1,4 +1,4 @@
-# MurmDuke3D - Duke Nukem 3D for RP2350
+# FRANK Duke3D - Duke Nukem 3D for RP2350
 
 A port of Duke Nukem 3D to the Raspberry Pi RP2350 microcontroller with PSRAM support, HDMI output, and PS/2 keyboard input.
 
@@ -13,16 +13,16 @@ A port of Duke Nukem 3D to the Raspberry Pi RP2350 microcontroller with PSRAM su
 
 ## Hardware Requirements
 
-MurmDuke3D requires a **Pico 2** (RP2350) with **8MB QSPI PSRAM**. It will **not run** on Pico 1 (RP2040).
+FRANK Duke3D requires a **Pico 2** (RP2350) with **8MB QSPI PSRAM**. It will **not run** on Pico 1 (RP2040).
 
 ### Supported Hardware Platforms
 
 This project runs on the following hardware platforms:
 
-- **[Murmulator](https://murmulator.ru)** - M1 (Murmulator 1) and M2 (Murmulator 2) variants
 - **[FRANK](https://rh1.tech/projects/frank)** - FRANK M1 and FRANK M2 variants
+- **[Murmulator](https://murmulator.ru)** - M1 (Murmulator 1) and M2 (Murmulator 2) variants
 
-Both platforms support different Pico versions, but MurmDuke3D specifically requires Pico 2.
+Both platforms support different Pico versions, but FRANK Duke3D specifically requires Pico 2.
 
 ### Obtaining PSRAM-Equipped Hardware
 
@@ -96,10 +96,10 @@ Example SD card structure:
 
 ## Flashing
 
-Copy `murmduke3d.uf2` to the RP2350 when in BOOTSEL mode, or use:
+Copy `frank-duke3d.uf2` to the RP2350 when in BOOTSEL mode, or use:
 
 ```bash
-picotool load build/murmduke3d.uf2
+picotool load build/frank-duke3d.uf2
 ```
 
 ## Firmware Variants
@@ -136,7 +136,7 @@ This project is licensed under the GNU General Public License v2.0 - see the [LI
 - **Build Engine** - Copyright (c) 1993-1997 Ken Silverman. See [BUILDLIC.txt](BUILDLIC.txt)
 - **Duke Nukem 3D Game Code** - Copyright (c) 1996, 2003 3D Realms Entertainment. Released under GPL v2.
 - **Audio Library** - Copyright (c) 1994-1995 Apogee Software, Ltd. James R. Dose. GPL v2.
-- **pico-extras** - Copyright (c) 2020 Raspberry Pi (Trading) Ltd. BSD-3-Clause.
+- **emu8950 OPL emulator** - Copyright (c) 2020 Raspberry Pi (Trading) Ltd. BSD-3-Clause.
 - **Pico SDK** - Copyright (c) 2020 Raspberry Pi (Trading) Ltd. BSD-3-Clause.
 
 ## Credits
@@ -155,7 +155,7 @@ This project is licensed under the GNU General Public License v2.0 - see the [LI
 - **Mikhail Matveev** (xtreme@outlook.com) - RP2350 port, PSRAM integration, hardware abstraction
 
 ### Libraries & Dependencies
-- **Raspberry Pi Foundation** - Pico SDK and pico-extras
+- **Raspberry Pi Foundation** - Pico SDK and emu8950 OPL emulator
 
 ## Contributing
 

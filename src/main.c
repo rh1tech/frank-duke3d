@@ -81,7 +81,7 @@ int main() {
         sleep_ms(500);
     }
 
-    printf("\n=== MurmDuke3D ===\n");
+    printf("\n=== FRANK Duke3D ===\n");
     printf("System Clock: %lu Hz\n", clock_get_hz(clk_sys));
 
     // Initialize PSRAM (required for game data)

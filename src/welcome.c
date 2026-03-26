@@ -15,8 +15,8 @@
 #include <math.h>
 
 // Version injected by CMake
-#ifndef MURMDUKE_VERSION
-#define MURMDUKE_VERSION "?"
+#ifndef FRANKDUKE_VERSION
+#define FRANKDUKE_VERSION "?"
 #endif
 
 // Board variant
@@ -493,8 +493,8 @@ const char *welcome_show(void) {
 
     // Build title strings
     char title_right[64];
-    snprintf(title_right, sizeof(title_right), " v%s", MURMDUKE_VERSION);
-    const char *title_left = "MurmDuke3D";
+    snprintf(title_right, sizeof(title_right), " v%s", FRANKDUKE_VERSION);
+    const char *title_left = "FRANK Duke3D";
 
     int title_left_w = text_width_5x7(title_left);
     int title_right_w = text_width_5x7(title_right);

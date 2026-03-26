@@ -84,12 +84,12 @@ for config in "${CONFIGS[@]}"; do
         else
             EXT="m2p2"
         fi
-        OUTPUT_NAME="murmduke32_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
-        BUILD_FILE="murmduke3d.${EXT}"
+        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
+        BUILD_FILE="frank-duke3d.${EXT}"
     else
         EXT="uf2"
-        OUTPUT_NAME="murmduke32_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
-        BUILD_FILE="murmduke3d.uf2"
+        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
+        BUILD_FILE="frank-duke3d.uf2"
     fi
 
     echo ""
@@ -144,6 +144,6 @@ fi
 
 echo ""
 echo "Release files in: $RELEASE_DIR/"
-ls -la "$RELEASE_DIR"/murmduke32_*_${VERSION}.* 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}'
+ls -la "$RELEASE_DIR"/frank-duke3d_*_${VERSION}.* 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}'
 echo ""
 echo "Version: ${MAJOR}.$(printf '%02d' $MINOR)"
