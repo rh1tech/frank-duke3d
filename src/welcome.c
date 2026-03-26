@@ -505,8 +505,12 @@ const char *welcome_show(void) {
     // Status lines
     char status1[64];
     char status2[64];
+    char status3[64];
+    char status4[64];
     snprintf(status1, sizeof(status1), "Up/Down: select, Enter: start");
-    snprintf(status2, sizeof(status2), "Board: %s, github.com/rh1tech", DBOARD_VARIANT);
+    snprintf(status2, sizeof(status2), "Board: %s, %d/%d MHz", DBOARD_VARIANT, CPU_CLOCK_MHZ, PSRAM_MAX_FREQ_MHZ);
+    snprintf(status3, sizeof(status3), "Port by Mikhail Matveev");
+    snprintf(status4, sizeof(status4), "https://github.com/rh1tech/frank-duke3d");
 
     // Draw static panel content
     draw_plasma_background(0, panel_x, panel_y, panel_w, panel_h);
@@ -521,9 +525,11 @@ const char *welcome_show(void) {
     draw_text_5x7(menu_x, menu_y - 14, "Select GRP file:", 1);
 
     // Status text at bottom
-    int bottom_y = panel_y + panel_h - 28;
+    int bottom_y = panel_y + panel_h - 48;
     draw_text_5x7(menu_x, bottom_y, status1, 1);
     draw_text_5x7(menu_x, bottom_y + 10, status2, 1);
+    draw_text_5x7(menu_x, bottom_y + 20, status3, 1);
+    draw_text_5x7(menu_x, bottom_y + 30, status4, 1);
 
     // Main selection loop
     while (true) {
