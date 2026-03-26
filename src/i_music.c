@@ -590,15 +590,9 @@ static void MusicGenerator(audio_buffer_t *buffer) {
                 int32_t sample = opl_temp_buffer[i];
                 int16_t left = (int16_t)(sample >> 16);
                 int16_t right = (int16_t)(sample & 0xFFFF);
-                // Amplify by 10x
-                int32_t amp_left = (int32_t)left * 10;
-                int32_t amp_right = (int32_t)right * 10;
-                if (amp_left > 32767) amp_left = 32767;
-                if (amp_left < -32768) amp_left = -32768;
-                if (amp_right > 32767) amp_right = 32767;
-                if (amp_right < -32768) amp_right = -32768;
-                out[(filled + i) * 2 + 0] = (int16_t)amp_left;
-                out[(filled + i) * 2 + 1] = (int16_t)amp_right;
+                // Amplify by 8x (matches Doom/Heretic OPL output level)
+                out[(filled + i) * 2 + 0] = left << 3;
+                out[(filled + i) * 2 + 1] = right << 3;
             }
 
             filled += chunk;

@@ -18,10 +18,6 @@
 #define DOOM_SMALL 1
 #define DOOM_TINY 1
 
-// Sample rate - must match I2S output
-#define PICO_SOUND_SAMPLE_FREQ 22050
-#define snd_samplerate PICO_SOUND_SAMPLE_FREQ
-
 // OPL timing
 #define OPL_SECOND 1000000ULL
 
