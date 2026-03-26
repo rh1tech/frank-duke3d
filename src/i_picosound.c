@@ -74,8 +74,8 @@ typedef struct voice_s {
 static i2s_config_t i2s_cfg;
 
 // Ring buffer: game loop fills ahead, DMA IRQ consumes via fill callback.
-// 4 slots gives ~133 ms of slack for jittery game tics at 30 FPS.
-#define MIX_RING_COUNT 4
+// 3 slots gives ~100 ms of slack for jittery game tics at 30 FPS.
+#define MIX_RING_COUNT 3
 static int16_t mix_ring[MIX_RING_COUNT][PICO_SOUND_BUFFER_SAMPLES * 2];
 static volatile uint32_t mix_rd = 0;  // read by IRQ
 static volatile uint32_t mix_wr = 0;  // written by game loop

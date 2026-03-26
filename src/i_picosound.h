@@ -23,9 +23,11 @@ typedef struct audio_buffer {
     uint32_t sample_count;
 } audio_buffer_t;
 
-// Audio sample rate
+// Audio sample rate - must match OPL2 native rate (3579545/72) when using
+// EMU8950_NO_RATECONV, otherwise OPL oscillator frequencies and envelopes
+// run at the wrong speed.
 #ifndef PICO_SOUND_SAMPLE_FREQ
-#define PICO_SOUND_SAMPLE_FREQ 22050
+#define PICO_SOUND_SAMPLE_FREQ 49716
 #endif
 
 // Number of sound channels for sound effects

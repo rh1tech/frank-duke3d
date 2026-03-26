@@ -38,8 +38,8 @@
 #define DMA_BUFFER_COUNT  2
 
 /* Maximum DMA transfer size in 32-bit words (stereo frames).
- * 1536 accommodates Duke3D's tick rate (~735 frames/tic at 22050 Hz). */
-#define DMA_BUFFER_MAX_SAMPLES 1536
+ * 1664 accommodates Duke3D at 49716 Hz / 30 FPS = ~1658 frames/tic. */
+#define DMA_BUFFER_MAX_SAMPLES 1664
 
 static uint32_t __attribute__((aligned(4)))
     dma_buffers[DMA_BUFFER_COUNT][DMA_BUFFER_MAX_SAMPLES];

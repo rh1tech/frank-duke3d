@@ -21,7 +21,7 @@
 #include "../components/Engine/filesystem.h"  // For kopen4load, kread, etc.
 
 // OPL configuration
-#define OPL_SAMPLE_RATE 22050
+#define OPL_SAMPLE_RATE PICO_SOUND_SAMPLE_FREQ
 #define OPL_CLOCK       3579545     // OPL2 clock frequency
 #define OPL_NUM_VOICES  9
 #define OPL_SECOND      1000000ULL  // Microseconds per second
