@@ -64,7 +64,7 @@ jobs:
 
             ### Firmware files
 
-            **Standard UF2 (drag & drop to Pico 2):**
+            **UF2 firmware (drag & drop to Pico 2):**
             | File | Board | CPU | PSRAM |
             |------|-------|-----|-------|
             | `frank-duke3d_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz |
@@ -72,19 +72,11 @@ jobs:
             | `frank-duke3d_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz |
             | `frank-duke3d_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz |
 
-            **Murmulator OS 2:**
-            | File | Board | CPU | PSRAM |
-            |------|-------|-----|-------|
-            | `frank-duke3d_m1_*.m1p2` | M1 | various | various |
-            | `frank-duke3d_m2_*.m2p2` | M2 | various | various |
-
             ### How to flash
             1. Hold BOOTSEL on your Pico 2 and plug in USB
             2. Drag the `.uf2` file matching your board to the RPI-RP2 drive
           files: |
             release/*.uf2
-            release/*.m1p2
-            release/*.m2p2
           draft: false
           prerelease: false
           generate_release_notes: true

@@ -46,16 +46,10 @@ mkdir -p "$RELEASE_DIR"
 
 # Build configurations: "BOARD CPU_SPEED PSRAM_SPEED MOS2 DESCRIPTION"
 CONFIGS=(
-    # Standard UF2 builds
     "M1 378 133 OFF medium-oc"
     "M1 504 166 OFF max-oc"
     "M2 378 133 OFF medium-oc"
     "M2 504 166 OFF max-oc"
-    # MOS2 builds (Murmulator OS 2)
-    "M1 378 133 ON mos2-medium"
-    "M1 504 166 ON mos2-max"
-    "M2 378 133 ON mos2-medium"
-    "M2 504 166 ON mos2-max"
 )
 
 BUILD_COUNT=0
@@ -77,20 +71,8 @@ for config in "${CONFIGS[@]}"; do
         BOARD_NUM=2
     fi
 
-    # Determine file extension and output name
-    if [[ "$MOS2" == "ON" ]]; then
-        if [[ "$BOARD" == "M1" ]]; then
-            EXT="m1p2"
-        else
-            EXT="m2p2"
-        fi
-        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
-        BUILD_FILE="frank-duke3d.${EXT}"
-    else
-        EXT="uf2"
-        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
-        BUILD_FILE="frank-duke3d.uf2"
-    fi
+    OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
+    BUILD_FILE="frank-duke3d.uf2"
 
     echo ""
     echo "[$BUILD_COUNT/$TOTAL_BUILDS] Building: $OUTPUT_NAME"
@@ -108,7 +90,6 @@ for config in "${CONFIGS[@]}"; do
         -DPSRAM_SPEED="$PSRAM" \
         -DFLASH_SPEED=66 \
         -DUSB_HID_ENABLED=ON \
-        -DMOS2="$MOS2" \
         > /dev/null 2>&1
 
     # Build

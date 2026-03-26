@@ -104,13 +104,12 @@ picotool load build/frank-duke3d.uf2
 
 ## Firmware Variants
 
-Pre-built firmware is available in three clock speed variants for each board type:
+Pre-built firmware is available in two clock speed variants for each board type (M1, M2):
 
 | Variant | CPU Clock | PSRAM Clock | Performance |
 |---------|-----------|-------------|-------------|
-| 252/100 | 252 MHz   | 84 MHz      | Baseline (no overclock) |
-| 378/133 | 378 MHz   | 126 MHz     | ~50% faster |
-| 504/166 | 504 MHz   | 168 MHz     | ~100% faster |
+| 378/133 | 378 MHz   | 126 MHz     | Moderate overclock |
+| 504/166 | 504 MHz   | 168 MHz     | Maximum overclock |
 
 ### Which variant should I use?
 
@@ -123,7 +122,7 @@ Not all RP2350 and PSRAM chips are created equal. Due to manufacturing variation
 - Graphical glitches or corruption
 - Boot failures
 
-Try a lower clock speed variant. The 252/100 variant runs at stock speeds and should work on all hardware.
+Try the 378/133 variant first. You can also build from source with `-DCPU_SPEED=252` for stock clock speeds.
 
 **Note:** Higher temperatures reduce stability margins. If a variant works when cool but fails after extended play, consider using a lower clock speed or adding cooling to your board.
 

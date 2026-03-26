@@ -6,9 +6,7 @@
 #   - Medium overclock: 378 MHz CPU, 133 MHz PSRAM (126 MHz actual)
 #   - Max overclock: 504 MHz CPU, 166 MHz PSRAM (168 MHz actual)
 #
-# Output formats:
-#   - UF2: frank-duke3d_mX_Y_Z_A_BB.uf2 (standard Pico firmware)
-#   - MOS2: frank-duke3d_mX_Y_Z_A_BB.m1p2/m2p2 (Murmulator OS 2)
+# Output: frank-duke3d_mX_Y_Z_A_BB.uf2 (standard Pico firmware)
 #
 # X  = Board variant (1 or 2)
 # Y  = CPU clock in MHz
@@ -100,16 +98,10 @@ mkdir -p "$RELEASE_DIR"
 #   378 MHz CPU + 133 MHz PSRAM = 126 MHz actual (medium)
 #   504 MHz CPU + 166 MHz PSRAM = 168 MHz actual (max stable)
 CONFIGS=(
-    # Standard UF2 builds
     "M1 378 133 OFF medium-oc"
     "M1 504 166 OFF max-oc"
     "M2 378 133 OFF medium-oc"
     "M2 504 166 OFF max-oc"
-    # MOS2 builds (Murmulator OS 2)
-    "M1 378 133 ON mos2-medium"
-    "M1 504 166 ON mos2-max"
-    "M2 378 133 ON mos2-medium"
-    "M2 504 166 ON mos2-max"
 )
 
 BUILD_COUNT=0
@@ -131,20 +123,8 @@ for config in "${CONFIGS[@]}"; do
         BOARD_NUM=2
     fi
 
-    # Determine file extension and output name
-    if [[ "$MOS2" == "ON" ]]; then
-        if [[ "$BOARD" == "M1" ]]; then
-            EXT="m1p2"
-        else
-            EXT="m2p2"
-        fi
-        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.${EXT}"
-        BUILD_FILE="frank-duke3d.${EXT}"
-    else
-        EXT="uf2"
-        OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
-        BUILD_FILE="frank-duke3d.uf2"
-    fi
+    OUTPUT_NAME="frank-duke3d_m${BOARD_NUM}_${CPU}_${PSRAM}_${VERSION}.uf2"
+    BUILD_FILE="frank-duke3d.uf2"
 
     echo ""
     echo -e "${CYAN}[$BUILD_COUNT/$TOTAL_BUILDS] Building: $OUTPUT_NAME${NC}"
@@ -162,7 +142,6 @@ for config in "${CONFIGS[@]}"; do
         -DPSRAM_SPEED="$PSRAM" \
         -DFLASH_SPEED=66 \
         -DUSB_HID_ENABLED=ON \
-        -DMOS2="$MOS2" \
         > /dev/null 2>&1
 
     # Build
@@ -190,10 +169,7 @@ echo -e "${GREEN}Release build complete!${NC}"
 echo ""
 echo "Release files in: $RELEASE_DIR/"
 echo ""
-echo -e "${CYAN}Standard UF2 files:${NC}"
+echo -e "${CYAN}UF2 files:${NC}"
 ls -la "$RELEASE_DIR"/frank-duke3d_*_${VERSION}.uf2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
-echo ""
-echo -e "${CYAN}MOS2 files (Murmulator OS 2):${NC}"
-ls -la "$RELEASE_DIR"/frank-duke3d_*_${VERSION}.m?p2 2>/dev/null | awk '{print "  " $9 " (" $5 " bytes)"}' || echo "  (none)"
 echo ""
 echo -e "Version: ${CYAN}${MAJOR}.$(printf '%02d' $MINOR)${NC}"

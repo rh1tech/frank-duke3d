@@ -4,7 +4,7 @@
 
 This project uses a **self-hosted GitHub Actions runner** named `rp2350-builder` to build firmware releases. The runner lives on a dedicated Debian x86_64 build server and is shared across multiple RP2350-based repositories under the `rh1tech` GitHub account.
 
-When a commit message starts with `release:` followed by a version number, the pipeline automatically builds all 8 firmware variants and publishes them as a GitHub Release.
+When a commit message starts with `release:` followed by a version number, the pipeline automatically builds all 4 firmware variants and publishes them as a GitHub Release.
 
 ## Architecture
 
@@ -77,18 +77,14 @@ When triggered by a `release:` commit on the `main` or `master` branch:
 
 1. **Checks out** the repository with submodules
 2. **Parses** the version from the first line of the commit message
-3. **Runs `release-ci.sh`** which builds all 8 firmware variants:
+3. **Runs `release-ci.sh`** which builds all 4 firmware variants:
 
-| # | File pattern | Board | CPU | PSRAM | Format |
-|---|-------------|-------|-----|-------|--------|
-| 1 | `frank-duke3d_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz | UF2 |
-| 2 | `frank-duke3d_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz | UF2 |
-| 3 | `frank-duke3d_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz | UF2 |
-| 4 | `frank-duke3d_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz | UF2 |
-| 5 | `frank-duke3d_m1_378_133_*.m1p2` | M1 | 378 MHz | 133 MHz | MOS2 |
-| 6 | `frank-duke3d_m1_504_166_*.m1p2` | M1 | 504 MHz | 166 MHz | MOS2 |
-| 7 | `frank-duke3d_m2_378_133_*.m2p2` | M2 | 378 MHz | 133 MHz | MOS2 |
-| 8 | `frank-duke3d_m2_504_166_*.m2p2` | M2 | 504 MHz | 166 MHz | MOS2 |
+| # | File pattern | Board | CPU | PSRAM |
+|---|-------------|-------|-----|-------|
+| 1 | `frank-duke3d_m1_378_133_*.uf2` | M1 | 378 MHz | 133 MHz |
+| 2 | `frank-duke3d_m1_504_166_*.uf2` | M1 | 504 MHz | 166 MHz |
+| 3 | `frank-duke3d_m2_378_133_*.uf2` | M2 | 378 MHz | 133 MHz |
+| 4 | `frank-duke3d_m2_504_166_*.uf2` | M2 | 504 MHz | 166 MHz |
 
 4. **Creates a GitHub Release** tagged `vMAJOR.MINOR` with all firmware files attached
 
@@ -113,7 +109,7 @@ frank-duke3d_m<BOARD>_<CPU>_<PSRAM>_<MAJOR>_<MINOR>.<ext>
 - `CPU` — CPU clock in MHz
 - `PSRAM` — PSRAM clock in MHz
 - `MAJOR_MINOR` — version with minor zero-padded (e.g., `1_04`)
-- `ext` — `uf2` (standard), `m1p2` (MOS2 board M1), `m2p2` (MOS2 board M2)
+- `ext` — `uf2`
 
 ## Files
 

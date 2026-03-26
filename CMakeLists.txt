@@ -23,10 +23,6 @@ set(FLASH_SPEED "66" CACHE STRING "Flash chip max frequency in MHz: 66, 88")
 # When disabled (default): USB port is used for serial console debug output
 option(USB_HID_ENABLED "Enable USB HID keyboard/mouse support (disables USB serial console)" OFF)
 
-# MOS2 configuration - Murmulator OS 2 builds
-# When enabled: Flash starts at 128KB offset for MOS2 bootloader, output is .m1p2/.m2p2
-option(MOS2 "Build for Murmulator OS 2 (m1p2/m2p2 format)" OFF)
-
 # CPU voltage selection based on speed
 # Higher speeds need higher voltage for stability
 if(CPU_SPEED GREATER_EQUAL 504)
@@ -256,13 +252,7 @@ target_link_options(frank-duke3d PRIVATE
 )
 
 # Use custom linker script with PSRAM sections
-# MOS2 builds use offset linker script for bootloader compatibility
-if(MOS2)
-    message(STATUS "MOS2 build: Using offset linker script for Murmulator OS 2")
-    pico_set_linker_script(frank-duke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.mos2.ld)
-else()
-    pico_set_linker_script(frank-duke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.ld)
-endif()
+pico_set_linker_script(frank-duke3d ${CMAKE_CURRENT_SOURCE_DIR}/memmap_psram.ld)
 
 target_link_libraries(frank-duke3d
     pico_stdlib
@@ -313,18 +303,3 @@ else()
 endif()
 
 pico_add_extra_outputs(frank-duke3d)
-
-# MOS2: Rename output file to .m1p2 or .m2p2
-if(MOS2)
-    if(BOARD_VARIANT STREQUAL "M2")
-        set(MOS2_EXT "m2p2")
-    else()
-        set(MOS2_EXT "m1p2")
-    endif()
-    add_custom_command(TARGET frank-duke3d POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_BINARY_DIR}/frank-duke3d.uf2"
-            "${CMAKE_CURRENT_BINARY_DIR}/frank-duke3d.${MOS2_EXT}"
-        COMMENT "Creating MOS2 output: frank-duke3d.${MOS2_EXT}"
-    )
-endif()
