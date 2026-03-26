@@ -994,7 +994,7 @@ typedef struct {
     int32 MouseDigitalAxeMapping[MAXMOUSEAXES][2];
 } rp2350_config_t;
 
-static const char* rp2350_config_filename = "duke3d.bin";
+static const char* rp2350_config_filename = "duke3d/duke3d.bin";
 
 void CONFIG_ReadSetup_RP2350(void)
 {
