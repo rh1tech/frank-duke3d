@@ -505,8 +505,8 @@ static void mix_audio_buffer(audio_buffer_t *buffer) {
         if (!v->active) continue;
         if (v->buffer_size == 0) continue;
 
-        int voll = v->left_vol / 2;
-        int volr = v->right_vol / 2;
+        int voll = v->left_vol / 4;
+        int volr = v->right_vol / 4;
 
         if (reverse_stereo) {
             int tmp = voll;

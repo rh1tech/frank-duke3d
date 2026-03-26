@@ -318,14 +318,14 @@ static void AL_SetVoicePitch(int voice) {
  */
 static void AL_NoteOn(int voice, int channel, int key, int velocity) {
     if (voice < 0 || voice >= OPL_NUM_VOICES) return;
-    
+
     // Store voice state
     voices[voice].key = key;
     voices[voice].channel = channel;
     voices[voice].velocity = velocity;
     voices[voice].status = NOTE_ON;
     voices[voice].active = true;
-    
+
     // Set timbre, volume, and pitch (in that order, like Duke3D)
     AL_SetVoiceTimbre(voice);
     AL_SetVoiceVolume(voice);
@@ -427,15 +427,40 @@ static void AllNotesOff(int channel) {
 }
 
 //=============================================================================
+// Debug: set to isolate audio issues
+// MUSIC_DEBUG_MUTE_PERCUSSION  1 = mute MIDI ch9 drums, hear only melodic
+// MUSIC_DEBUG_SOLO_PERCUSSION  1 = solo MIDI ch9 drums, mute melodic
+// MUSIC_DEBUG_MUTE_MUSIC       1 = mute all OPL music (hear only SFX)
+//=============================================================================
+// Set SOLO_CHANNEL to 0-15 to hear only that MIDI channel, or -1 for all
+#define MUSIC_DEBUG_SOLO_CHANNEL     -1
+#define MUSIC_DEBUG_MUTE_PERCUSSION  0
+#define MUSIC_DEBUG_SOLO_PERCUSSION  0
+#define MUSIC_DEBUG_MUTE_MUSIC       0
+
+//=============================================================================
 // MIDI Event Processing
 //=============================================================================
 
 static void ProcessMIDIEvent(midi_event_t *event) {
     if (!event) return;
 
+#if MUSIC_DEBUG_MUTE_MUSIC
+    return;
+#endif
+
     switch (event->event_type) {
         case MIDI_EVENT_NOTE_OFF: {
             int ch = event->data.channel.channel;
+#if MUSIC_DEBUG_SOLO_CHANNEL >= 0
+            if (ch != MUSIC_DEBUG_SOLO_CHANNEL) break;
+#endif
+#if MUSIC_DEBUG_MUTE_PERCUSSION
+            if (ch == 9) break;
+#endif
+#if MUSIC_DEBUG_SOLO_PERCUSSION
+            if (ch != 9) break;
+#endif
             int note = event->data.channel.param1;
             int voice = FindVoice(ch, note);
             if (voice >= 0) {
@@ -446,11 +471,19 @@ static void ProcessMIDIEvent(midi_event_t *event) {
 
         case MIDI_EVENT_NOTE_ON: {
             int ch = event->data.channel.channel;
+#if MUSIC_DEBUG_SOLO_CHANNEL >= 0
+            if (ch != MUSIC_DEBUG_SOLO_CHANNEL) break;
+#endif
+#if MUSIC_DEBUG_MUTE_PERCUSSION
+            if (ch == 9) break;
+#endif
+#if MUSIC_DEBUG_SOLO_PERCUSSION
+            if (ch != 9) break;
+#endif
             int note = event->data.channel.param1;
             int vel = event->data.channel.param2;
-            
+
             if (vel == 0) {
-                // Note on with velocity 0 = note off
                 int voice = FindVoice(ch, note);
                 if (voice >= 0) {
                     AL_NoteOff(voice);
@@ -529,6 +562,12 @@ static void ScheduleNextEvent(unsigned int track_num) {
     track_next_event_us[track_num] = current_time_us + delta_us;
 }
 
+// Simple low-pass filter state to simulate YM3812 analog output filtering.
+// The real OPL2 DAC + analog stage naturally attenuates harsh high-frequency
+// content from high-feedback patches. Without this, FB=7 instruments sound
+// much harsher in digital emulation than on real hardware.
+static int32_t lpf_prev_l = 0, lpf_prev_r = 0;
+
 static void MusicGenerator(audio_buffer_t *buffer) {
     static uint32_t call_count = 0;
     call_count++;
@@ -588,11 +627,16 @@ static void MusicGenerator(audio_buffer_t *buffer) {
 
             for (unsigned int i = 0; i < chunk; i++) {
                 int32_t sample = opl_temp_buffer[i];
-                int16_t left = (int16_t)(sample >> 16);
-                int16_t right = (int16_t)(sample & 0xFFFF);
+                int32_t left = (int16_t)(sample >> 16);
+                int32_t right = (int16_t)(sample & 0xFFFF);
+                // Low-pass filter: y = 0.5*x + 0.5*prev (simulates YM3812 analog output stage)
+                left = (left + lpf_prev_l) >> 1;
+                right = (right + lpf_prev_r) >> 1;
+                lpf_prev_l = left;
+                lpf_prev_r = right;
                 // Amplify by 8x (matches Doom/Heretic OPL output level)
-                out[(filled + i) * 2 + 0] = left << 3;
-                out[(filled + i) * 2 + 1] = right << 3;
+                out[(filled + i) * 2 + 0] = (int16_t)(left << 3);
+                out[(filled + i) * 2 + 1] = (int16_t)(right << 3);
             }
 
             filled += chunk;
@@ -636,13 +680,17 @@ static void MusicGenerator(audio_buffer_t *buffer) {
 
         if (running_tracks == 0) {
             if (music_looping && current_midi) {
+                // Re-create iterators (they were NULLed on end-of-track)
                 for (unsigned int t = 0; t < num_tracks; t++) {
                     if (track_iters[t]) {
                         MIDI_RestartIterator(track_iters[t]);
+                    } else {
+                        track_iters[t] = MIDI_IterateTrack(current_midi, t);
                     }
                 }
                 running_tracks = num_tracks;
                 current_time_us = 0;
+                us_per_beat = 500000;  // Reset tempo to default 120 BPM
                 for (unsigned int t = 0; t < num_tracks; t++) {
                     if (track_iters[t]) {
                         ScheduleNextEvent(t);
@@ -664,17 +712,16 @@ static void MusicGenerator(audio_buffer_t *buffer) {
         
         for (unsigned int i = 0; i < chunk; i++) {
             int32_t sample = opl_temp_buffer[i];
-            int16_t left = (int16_t)(sample >> 16);
-            int16_t right = (int16_t)(sample & 0xFFFF);
-            // Amplify by 10x
-            int32_t amp_left = (int32_t)left * 10;
-            int32_t amp_right = (int32_t)right * 10;
-            if (amp_left > 32767) amp_left = 32767;
-            if (amp_left < -32768) amp_left = -32768;
-            if (amp_right > 32767) amp_right = 32767;
-            if (amp_right < -32768) amp_right = -32768;
-            out[(filled + i) * 2 + 0] = (int16_t)amp_left;
-            out[(filled + i) * 2 + 1] = (int16_t)amp_right;
+            int32_t left = (int16_t)(sample >> 16);
+            int32_t right = (int16_t)(sample & 0xFFFF);
+            // Low-pass filter: y = 0.75*x + 0.25*prev (simulates analog output stage)
+            left = (left * 3 + lpf_prev_l) >> 2;
+            right = (right * 3 + lpf_prev_r) >> 2;
+            lpf_prev_l = left;
+            lpf_prev_r = right;
+            // Amplify by 8x (matches Doom/Heretic OPL output level)
+            out[(filled + i) * 2 + 0] = (int16_t)(left << 3);
+            out[(filled + i) * 2 + 1] = (int16_t)(right << 3);
         }
         filled += chunk;
         current_time_us += (chunk * OPL_SECOND) / OPL_SAMPLE_RATE;
