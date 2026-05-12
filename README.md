@@ -1,5 +1,7 @@
 # FRANK Duke3D - Duke Nukem 3D for RP2350
 
+Official page: **[frank.rh1.tech](https://frank.rh1.tech/)** — hub for all FRANK boards and firmware.
+
 A port of Duke Nukem 3D to the Raspberry Pi RP2350 microcontroller with PSRAM support, HDMI output, and PS/2 keyboard input.
 
 ## Features
